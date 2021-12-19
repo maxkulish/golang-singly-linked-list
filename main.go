@@ -19,7 +19,8 @@ func (l *linkedList) Len() int {
 }
 
 // Display print all node.data fields of the linked list
-func (l *linkedList) Display() {
+// will get Panic if pointer to the linkedList is used
+func (l linkedList) Display() {
 	for l.first != nil {
 		fmt.Printf("%v -> ", l.first.data)
 		l.first = l.first.next
@@ -70,6 +71,47 @@ func (l *linkedList) Delete(data int) {
 	fmt.Println("node deleted")
 }
 
+// Front return node.data field of the first node
+func (l *linkedList) Front() (int, error) {
+	// case when list if empty
+	if l.first == nil {
+		return 0, fmt.Errorf("can't find front value. List might be empty")
+	}
+
+	return l.first.data, nil
+}
+
+// Back return node.data field of the last node
+func (l *linkedList) Back() (int, error) {
+	// case when list is empty
+	if l.first == nil {
+		return 0, fmt.Errorf("can't find back value. List might be empty")
+	}
+
+	return l.last.data, nil
+}
+
+// Reverse reverses the linked list. The first element becomes last. The last becomes the first.
+func (l *linkedList) Reverse() {
+
+	// case when list is empty
+	if l.first == nil {
+		return
+	}
+
+	curr := l.first
+	l.last = l.first
+
+	var prev *node
+	for curr != nil {
+		temp := curr.next
+		curr.next = prev
+		prev = curr
+		curr = temp
+	}
+	l.first = prev
+}
+
 func main() {
 
 	list := linkedList{}
@@ -83,6 +125,15 @@ func main() {
 	fmt.Println("Length = ", list.Len())
 	list.Display()
 	list.Delete(3)
-	//fmt.Println("Length = ", list.Len())
-	//list.Display()
+	fmt.Println("Length = ", list.Len())
+	list.Display()
+
+	first, _ := list.Front()
+	fmt.Println("First: ", first)
+
+	last, _ := list.Back()
+	fmt.Println("Last: ", last)
+
+	list.Reverse()
+	list.Display()
 }
